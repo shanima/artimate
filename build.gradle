@@ -66,8 +66,15 @@ task generateMocapData {
     description 'Generate BVH files from the ASCII EMA files.'
     //dependsOn convertData
     group 'data'
-    for (i in 1)
-    def inputFile = file("$buildDir/data/msak0_001.txt")
+    for (txt in 1..460) {
+        def num = Integer.toString(txt)
+        if (num.size() == 1) {
+            num = "00" + num
+        } else if (num.size() == 2) {
+            num = "0" + num
+        }
+        def inputFile = file("$buildDir/data/msak0_" + num + ".txt")
+
     doLast {
         def processheader = true
         def header = [:]
@@ -141,15 +148,16 @@ task generateMocapData {
             roots.each { root ->
                 def x_chan = root + "_x"
                 def y_chan = root + "_y"
-                def x_value = spreadsheet[x_chan][f-1]
-                def y_value = spreadsheet[y_chan][f-1]
+                def x_value = spreadsheet[x_chan][f - 1]
+                def y_value = spreadsheet[y_chan][f - 1]
                 def z_value = "0"
                 print([x_value, y_value, z_value, '\t'].join('\t'))
             }
             print "\n"
         }
-
     }
+    }
+
 }
 
 task buildModel {
